@@ -1,0 +1,27 @@
+{
+  "model_config": {
+    "name": "robust_resnet18",
+    "num_classes": 2,
+    "width": 64,
+    "dropout": 0.15
+  },
+  "total_parameters": 11286882,
+  "trainable_parameters": 11286882,
+  "buffer_elements": 9750,
+  "module_parameters": {
+    "stem": 28768,
+    "stages": 11257088,
+    "pool": 0,
+    "dropout": 0,
+    "classifier": 1026
+  },
+  "first_conv_weight_shape": [
+    32,
+    3,
+    3,
+    3
+  ],
+  "first_conv_parameters": 864,
+  "classifier_parameters": 1026,
+  "note": "Architecture counts only; no training or inference performed. BatchNorm running statistics are buffers, not trainable parameters."
+}

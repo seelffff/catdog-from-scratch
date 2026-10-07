@@ -1,0 +1,116 @@
+{
+  "revision": "V2",
+  "seed": 9001,
+  "requested_test_images": 1000,
+  "dataset_policy": "Only the original supplied 9972-image dataset; no new or external images",
+  "source_manifest": "data/splits.csv",
+  "source_manifest_sha256": "6b2d30eb09ea96a457e4370145d6d473ccfd4fe969bb3a2f14ffc1b4a9843ed3",
+  "output_manifest": "data/splits_v2.csv",
+  "output_manifest_sha256": "334e10c5e72f18c4cf9c11e4bd64eed3feb0bdf34a7594803ca955f0c0fb992e",
+  "script_sha256": "36a2a80d03f6d5de901f9928d3f8c99a38b9ef590d8acfd5e0a389b32e0c4367",
+  "source_counts": {
+    "train": {
+      "images": 7978,
+      "cat": 3968,
+      "dog": 4010,
+      "unique_groups": 7976
+    },
+    "val": {
+      "images": 997,
+      "cat": 496,
+      "dog": 501,
+      "unique_groups": 996
+    },
+    "test": {
+      "images": 997,
+      "cat": 496,
+      "dog": 501,
+      "unique_groups": 996
+    }
+  },
+  "v2_counts": {
+    "train": {
+      "images": 7975,
+      "cat": 3967,
+      "dog": 4008,
+      "unique_groups": 7972
+    },
+    "val": {
+      "images": 997,
+      "cat": 496,
+      "dog": 501,
+      "unique_groups": 996
+    },
+    "test": {
+      "images": 1000,
+      "cat": 497,
+      "dog": 503,
+      "unique_groups": 1000
+    }
+  },
+  "total_images": 9972,
+  "class_to_label": {
+    "cat": 0,
+    "dog": 1
+  },
+  "test_stratification_source": "Eligible V1 train after demonstration-group exclusions; largest-remainder integer apportionment",
+  "eligible_v1_train_class_counts": {
+    "cat": 3967,
+    "dog": 4009
+  },
+  "test_class_targets": {
+    "cat": 497,
+    "dog": 503
+  },
+  "excluded_demonstration_images": [
+    "data/raw/train/cat.0.jpg",
+    "data/raw/train/dog.1.jpg"
+  ],
+  "excluded_demonstration_group_ids": [
+    "group_00000",
+    "group_04961"
+  ],
+  "excluded_demonstration_group_member_paths": [
+    "data/raw/train/cat.0.jpg",
+    "data/raw/train/dog.1.jpg"
+  ],
+  "group_sampling": "Sorted group IDs per class; random.Random(seed) shuffle; exact-size subset sum in that fixed order",
+  "group_policy": "All V1 exact/verified-near duplicate group_id members remain together",
+  "transitions": {
+    "test_to_train": 997,
+    "train_to_test": 1000,
+    "train_to_train": 6978,
+    "val_to_val": 997
+  },
+  "old_validation_preserved": true,
+  "old_test_policy": "All V1 test images are now V2 train; V1 metrics remain historical V1 results and are not V2 metrics",
+  "new_test_policy": "V2 test is a new closed holdout from V1 train; no pixels or predictions accessed during preparation",
+  "training_policy": {
+    "required_initialization": "random",
+    "v1_checkpoints_allowed": false,
+    "reason": "V1 networks already trained on the former V1 train images that now form V2 test",
+    "must_reinitialize_all_weights_and_buffers": true,
+    "checkpoint_manifest_hash_must_match": "334e10c5e72f18c4cf9c11e4bd64eed3feb0bdf34a7594803ca955f0c0fb992e",
+    "validation_only_selection": true,
+    "final_test_policy": "Freeze all model/preprocessing/calibration choices before one final V2 test; never tune from that result"
+  },
+  "path_compatibility": {
+    "image_dataset_root": "cats-dogs",
+    "relative_paths_unchanged": true,
+    "reason": "ImageDataset computes root as manifest.parent.parent; a nested data/v2/splits.csv would incorrectly resolve existing data/raw/train paths"
+  },
+  "checks": {
+    "validation_rows_identical": true,
+    "paths_labels_hashes_dimensions_preserved": true,
+    "duplicate_groups_crossing_splits": 0,
+    "exact_image_hashes_crossing_splits": 0,
+    "path_sets_disjoint_between_splits": true,
+    "group_sets_disjoint_between_splits": true,
+    "only_original_image_paths_used": true,
+    "all_old_test_now_train": true,
+    "all_new_test_from_old_train": true,
+    "image_files_opened": 0,
+    "image_hashes_reused_from_v1_metadata": true,
+    "demonstration_images_and_their_groups_remain_train": true
+  }
+}

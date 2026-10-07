@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Кошка или собака</title>
+  <meta name="description" content="Учебная свёрточная сеть: отличает кошек от собак и показывает, что происходит внутри.">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <script>
+    // Тема до первой отрисовки, чтобы не мигало.
+    try { const t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch {}
+  </script>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap top-inner">
+    <a class="brand" href="#">
+      <svg class="brand-logo" viewBox="0 0 32 32" aria-hidden="true">
+        <rect width="32" height="32" rx="3" class="lg-bg"/>
+        <g class="lg-px"><rect x="6" y="6" width="6" height="6"/><rect x="13" y="6" width="6" height="6" opacity=".45"/><rect x="20" y="6" width="6" height="6"/><rect x="6" y="13" width="6" height="6" opacity=".45"/><rect x="20" y="13" width="6" height="6" opacity=".45"/><rect x="6" y="20" width="6" height="6"/><rect x="13" y="20" width="6" height="6" opacity=".45"/></g>
+        <rect x="13" y="13" width="6" height="6" class="lg-ac"/><rect x="20" y="20" width="6" height="6" class="lg-ac"/>
+      </svg>
+      <span class="brand-name">catdog</span>
+      <span class="brand-sub">учебная CNN</span>
+    </a>
+    <nav class="nav">
+      <a href="#lab">Распознать</a>
+      <a href="#inside">Внутри сети</a>
+    </nav>
+    <div class="top-right">
+      <div class="status" id="modelStatus" data-mode="unknown">
+        <span class="dot"></span><span id="modelStatusText">проверяю модель…</span>
+      </div>
+      <button type="button" class="icon-btn" id="themeToggle" aria-label="Сменить тему">
+        <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>
+        <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.6A8.2 8.2 0 0 1 9.4 4a8.2 8.2 0 1 0 10.6 10.6Z"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="intro wrap">
+    <p class="kicker"><span>01</span> Классификатор изображений</p>
+    <h1>Кошка <em>или</em> собака?</h1>
+    <p class="lead">
+      Загрузите фотографию кошки или собаки. Нейросеть выберет класс,
+      а ниже вы увидите её первые карты признаков и учебную схему обработки.
+    </p>
+    <dl class="facts">
+      <div><dt>вход модели · RGB</dt><dd>256 × 256</dd></div>
+      <div><dt>параметров</dt><dd>11,3 млн</dd></div>
+      <div><dt>верных ответов · тест</dt><dd>97,5%</dd></div>
+      <div><dt>классов</dt><dd>2</dd></div>
+    </dl>
+  </section>
+
+  <section class="lab wrap" id="lab">
+    <div class="lab-grid">
+      <div class="lab-left">
+        <div class="frame" id="frame" tabindex="0" role="button" aria-label="Загрузить изображение">
+          <span class="corner tl"></span><span class="corner tr"></span>
+          <span class="corner bl"></span><span class="corner br"></span>
+          <div class="frame-empty" id="frameEmpty">
+            <svg class="upload-icon" viewBox="0 0 48 48" aria-hidden="true">
+              <path d="M24 30V8M15 17l9-9 9 9"/><path d="M8 28v10a2 2 0 0 0 2 2h28a2 2 0 0 0 2-2V28"/>
+            </svg>
+            <p class="frame-title">Перетащите фото сюда</p>
+            <p class="frame-hint">или нажмите, чтобы выбрать · вставка <kbd id="pasteKey">Ctrl V</kbd></p>
+            <p class="frame-formats">JPG · PNG · WebP · до 20 МБ</p>
+          </div>
+          <img id="preview" alt="Загруженное изображение" hidden>
+          <video id="camera" playsinline muted hidden></video>
+          <div class="frame-drop">Отпустите, чтобы загрузить</div>
+          <div class="frame-scan" aria-hidden="true"></div>
+        </div>
+
+        <div class="toolbar">
+          <div class="tool-group">
+            <button type="button" class="tool" id="btnFile">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>Файл
+            </button>
+            <button type="button" class="tool" id="btnPaste">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="4" width="10" height="4" rx="1"/><path d="M7 6H6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-1"/></svg>Буфер
+            </button>
+            <button type="button" class="tool" id="btnCamera">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg><span id="btnCameraLabel">Камера</span>
+            </button>
+          </div>
+          <form class="url" id="urlForm">
+            <input id="urlInput" type="url" placeholder="Ссылка на картинку" autocomplete="off" spellcheck="false">
+            <button type="submit" class="tool" aria-label="Загрузить по ссылке">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </button>
+          </form>
+        </div>
+        <p class="msg" id="msg" role="status"></p>
+        <input type="file" id="fileInput" accept="image/*" hidden>
+      </div>
+
+      <aside class="verdict pending" id="verdict" aria-live="polite">
+        <p class="eyebrow">Ответ сети</p>
+        <p class="verdict-word" id="verdictWord">ждёт фото</p>
+        <div class="confidence">
+          <span class="conf-num" id="confNum">—</span>
+          <span class="conf-label">уверенность</span>
+        </div>
+        <div class="split" id="split">
+          <div class="split-bar"><i class="split-cat" id="barCat"></i><i class="split-dog" id="barDog"></i></div>
+          <div class="split-legend">
+            <span id="rowCat"><b>кошка</b> <span id="pCat">—</span></span>
+            <span id="rowDog"><span id="pDog">—</span> <b>собака</b></span>
+          </div>
+        </div>
+        <p class="note" id="verdictNote">Загрузите фото, и сеть его посмотрит.</p>
+
+        <div class="history" id="history" hidden>
+          <p class="eyebrow">Недавние</p>
+          <div class="history-list" id="historyList"></div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="inside" id="inside">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="kicker"><span>02</span> Как это работает</p>
+          <h2>Как сеть <em>видит</em> фото</h2>
+        </div>
+        <div class="controls">
+          <button type="button" class="ghost" id="btnReplay" disabled>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4h4"/></svg>Повторить
+          </button>
+          <button type="button" class="ghost" id="btnSkip" disabled>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l9 7-9 7zM17 5v14"/></svg>Пропустить
+          </button>
+        </div>
+      </div>
+      <p class="section-lead">
+        Картинка идёт через слои слева направо. Свёртка ищет простые узоры, например края и пятна,
+        и каждый фильтр рисует свою <em>карту признаков</em>: тёмное значит «узор найден», красное значит «найден противоположный».
+        Наведите курсор на вход, чтобы увидеть расчёт в любой точке.
+      </p>
+
+      <div class="pipeline-wrap"><ol class="pipeline" id="pipeline"></ol></div>
+
+      <div class="panels">
+        <article class="panel closeup">
+          <header class="panel-head">
+            <span class="panel-n">02</span>
+            <h3>Свёртка <em>крупным планом</em></h3>
+          </header>
+          <p class="panel-lead">Фильтр 3×3 умножается на кусочек картинки, а произведения складываются. Это одно число на карте признаков.</p>
+          <div class="kernel-tabs" id="kernelTabs" role="tablist"></div>
+          <div class="math">
+            <div class="m-block"><div class="grid3" id="gPatch"></div><span class="cap">пиксели</span></div>
+            <span class="op">×</span>
+            <div class="m-block"><div class="grid3" id="gKernel"></div><span class="cap">фильтр</span></div>
+            <span class="op">=</span>
+            <div class="m-block results">
+              <div class="sum"><span class="sum-label">сумма</span><span id="gSum">—</span></div>
+              <div class="sum"><span class="sum-label">после ReLU</span><span id="gRelu">—</span></div>
+            </div>
+          </div>
+          <p class="formula" id="formula"></p>
+          <p class="pos" id="closeupPos"></p>
+        </article>
+
+        <article class="panel dense" data-stage="dense">
+          <header class="panel-head">
+            <span class="panel-n">07–08</span>
+            <h3>Полносвязные <em>слои</em></h3>
+          </header>
+          <p class="panel-lead">Все карты вытягиваются в один вектор, и каждый нейрон смотрит на все значения сразу. Красные точки бегут по самым сильным связям.</p>
+          <div class="dense-canvas-wrap"><canvas id="denseCanvas"></canvas></div>
+        </article>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-inner">
+    <div>
+      <p class="foot-brand">catdog</p>
+      <p>Учебный проект: свёрточная нейросеть, которая отличает кошек от собак.</p>
+    </div>
+    <div>
+      <p class="foot-h">Режим</p>
+      <p id="footMode">—</p>
+    </div>
+    <div>
+      <p class="foot-h">Визуализация</p>
+      <p>Первые этапы свёртки, ReLU и pooling показывают карты обученной CNN; для ансамбля — первой сети, до отражения кадра. Остальная схема, расчёт крупным планом и линии связей — учебные иллюстрации.</p>
+    </div>
+  </div>
+</footer>
+
+<script type="module" src="/src/main.ts"></script>
+</body>
+</html>

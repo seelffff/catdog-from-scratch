@@ -1,0 +1,19 @@
+services:
+  app:
+    build: .
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - ./models:/app/models:ro
+    environment:
+      MODEL_PATH: /app/models/v2_best.pt
+      MODEL_SHA256: ${MODEL_SHA256:-9075d303f55d15f12b2f52709b606f6074d4f7494e1fc1c53cc61b5570bc77db}
+      MAX_UPLOAD_MB: ${MAX_UPLOAD_MB:-20}
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    pids_limit: 128
+    mem_limit: 1g
+    restart: unless-stopped

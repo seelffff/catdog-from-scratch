@@ -1,0 +1,14 @@
+.git
+.venv
+**/node_modules
+**/__pycache__
+**/.pytest_cache
+frontend/dist
+models/*.pt
+data
+artifacts
+outputs
+docs
+reports
+*.zip
+.env

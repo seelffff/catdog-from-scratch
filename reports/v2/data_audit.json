@@ -1,0 +1,107 @@
+{
+  "dataset_directory": "data/raw/train",
+  "seed": 9001,
+  "class_to_label": {
+    "cat": 0,
+    "dog": 1
+  },
+  "total_files": 9972,
+  "valid_images": 9972,
+  "invalid_images": [],
+  "filename_label_counts": {
+    "cat": 4960,
+    "dog": 5012
+  },
+  "image_dimensions": {
+    "width_min_median_max": [
+      42,
+      448.0,
+      1050
+    ],
+    "height_min_median_max": [
+      33,
+      374.0,
+      768
+    ]
+  },
+  "exact_duplicate_groups": [],
+  "exact_duplicate_extra_images": 0,
+  "verified_near_duplicate_pairs": [
+    {
+      "first": "data/raw/train/cat.1930.jpg",
+      "second": "data/raw/train/cat.10052.jpg",
+      "phash_distance": 2,
+      "thumbnail_mae_0_255": 1.1276,
+      "thumbnail_correlation": 0.999597
+    },
+    {
+      "first": "data/raw/train/cat.4435.jpg",
+      "second": "data/raw/train/cat.3411.jpg",
+      "phash_distance": 0,
+      "thumbnail_mae_0_255": 0.8704,
+      "thumbnail_correlation": 0.998347
+    },
+    {
+      "first": "data/raw/train/cat.4726.jpg",
+      "second": "data/raw/train/cat.2580.jpg",
+      "phash_distance": 0,
+      "thumbnail_mae_0_255": 1.1064,
+      "thumbnail_correlation": 0.998987
+    },
+    {
+      "first": "data/raw/train/dog.9746.jpg",
+      "second": "data/raw/train/dog.5733.jpg",
+      "phash_distance": 2,
+      "thumbnail_mae_0_255": 1.9938,
+      "thumbnail_correlation": 0.999297
+    }
+  ],
+  "duplicate_grouping_policy": {
+    "exact": "SHA-256 of EXIF-oriented, decoded RGB pixels and dimensions",
+    "near": "64-bit DCT perceptual hash Hamming distance <=4, aspect ratio within 5%, 32x32 RGB MAE <=6/255, RGB correlation >=0.985",
+    "leakage_prevention": "All connected exact/verified-near duplicate members are assigned to one split",
+    "limitations": "Conservative near matching may miss crops, mirrors or heavily edited duplicates; filename labels are not visually corrected"
+  },
+  "quarantined_conflicting_label_groups": [],
+  "manifest_images": 9972,
+  "unique_duplicate_groups": 9968,
+  "split_counts": {
+    "train": {
+      "total": 7975,
+      "cat": 3967,
+      "dog": 4008
+    },
+    "val": {
+      "total": 997,
+      "cat": 496,
+      "dog": 501
+    },
+    "test": {
+      "total": 1000,
+      "cat": 497,
+      "dog": 503
+    }
+  },
+  "duplicate_groups_crossing_splits": 0,
+  "test_policy": "V2 test is a new closed holdout from V1 train; no pixels or predictions accessed during preparation",
+  "revision": "V2",
+  "manifest_sha256": "334e10c5e72f18c4cf9c11e4bd64eed3feb0bdf34a7594803ca955f0c0fb992e",
+  "split_unique_groups": {
+    "train": 7972,
+    "val": 996,
+    "test": 1000
+  },
+  "source_audit_sha256": "cd8c13998c683ca20ea87571abeeeec8b6a7e33a7d0eaead8dd50e63fd7a3973",
+  "original_image_audit_reused": true,
+  "image_files_opened_for_revision": 0,
+  "split_provenance": "split_plan.json",
+  "training_policy": {
+    "required_initialization": "random",
+    "v1_checkpoints_allowed": false,
+    "reason": "V1 networks already trained on the former V1 train images that now form V2 test",
+    "must_reinitialize_all_weights_and_buffers": true,
+    "checkpoint_manifest_hash_must_match": "334e10c5e72f18c4cf9c11e4bd64eed3feb0bdf34a7594803ca955f0c0fb992e",
+    "validation_only_selection": true,
+    "final_test_policy": "Freeze all model/preprocessing/calibration choices before one final V2 test; never tune from that result"
+  }
+}

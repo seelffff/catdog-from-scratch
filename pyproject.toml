@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "catdog-from-scratch"
+version = "1.0.0"
+description = "An educational cat/dog CNN trained from scratch, with a FastAPI and TypeScript demo"
+requires-python = ">=3.11"
+dependencies = ["torch==2.10.0", "numpy>=2,<3", "Pillow>=12,<13"]
+
+[project.optional-dependencies]
+training = ["torchvision>=0.25,<0.26", "scikit-learn>=1.7,<2", "matplotlib>=3.10,<4"]
+dev = ["pytest>=8,<9"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

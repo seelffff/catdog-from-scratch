@@ -1,0 +1,9 @@
+{
+  "epochs_completed": 90,
+  "best_epoch": 67,
+  "best_val_balanced_accuracy": 0.9658364722168566,
+  "best_val_loss": 0.11264674761589456,
+  "elapsed_seconds": 5585.296197957941,
+  "stop_reason": "epochs_completed",
+  "best_checkpoint": "artifacts/v2/runs/robust224_w64/best.pt"
+}

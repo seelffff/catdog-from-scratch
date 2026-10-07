@@ -1,0 +1,10 @@
+{
+  "filename": "v2_best.pt",
+  "sha256": "9075d303f55d15f12b2f52709b606f6074d4f7494e1fc1c53cc61b5570bc77db",
+  "bytes": 45238835,
+  "source_checkpoint_sha256": "ca23b29d44192c8f573c47c9762e51b4809ec4dad76edfac9e068046b74674c4",
+  "learned_tensors_unchanged": true,
+  "preprocessing_unchanged": true,
+  "metadata_note": "Absolute local paths were converted to portable relative paths; no weights were retrained or changed.",
+  "download_url": "https://raw.githubusercontent.com/seelffff/catdog-from-scratch/v1.0.0/models/v2_best.pt"
+}
